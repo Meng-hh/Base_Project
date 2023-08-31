@@ -7,7 +7,6 @@ import org.springframework.context.ApplicationContext
 import org.springframework.context.ApplicationContextAware
 import org.springframework.core.annotation.AnnotationUtils
 import org.springframework.stereotype.Component
-import java.awt.Event
 import java.lang.reflect.Method
 
 @Component
@@ -18,7 +17,7 @@ class MyEventListenerHandler : Events,ApplicationContextAware{
     private  var listenerMethods : MutableList<Method> = mutableListOf()
 
     override fun publish(baseEvent: BaseEvent) {
-         if (listenerMethods.isNullOrEmpty()) pillListenerMethods()
+         if (listenerMethods.isNullOrEmpty()) fillListenerMethods()
         listenerMethods.forEach { listenerMethod ->
             //1.先获取监听器方法的参数的event的类型，根据这个类型去匹配
             val validate = listenerMethod.parameterTypes.filter { BaseEvent::class.java.isAssignableFrom(it) }
@@ -29,7 +28,7 @@ class MyEventListenerHandler : Events,ApplicationContextAware{
         }
     }
 
-    fun pillListenerMethods() {
+    fun fillListenerMethods() {
         this.context.getBeansWithAnnotation(MyEventListener::class.java)
             .values.forEach { clazz->
                 clazz::class.java.declaredMethods.forEach { method ->
